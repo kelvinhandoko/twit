@@ -15,15 +15,29 @@ datasource db {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(cuid())
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById String
+    Comment     Comment[]
 
     @@index([name])
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    body      String
+
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String
+
+    commentById String
+    commentBy   User   @relation(fields: [commentById], references: [id], onDelete: Cascade)
 }
 
 // Necessary for Next auth
@@ -63,6 +77,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Comment       Comment[]
 }
 
 model VerificationToken {
