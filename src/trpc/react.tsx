@@ -64,16 +64,16 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <api.Provider client={trpcClient} queryClient={queryClient}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <LazyMotion features={domAnimation}>{props.children}</LazyMotion>
-        </api.Provider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </api.Provider>
     </QueryClientProvider>
   );
 }

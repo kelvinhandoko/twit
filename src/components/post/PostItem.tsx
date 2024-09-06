@@ -1,14 +1,12 @@
 "use client";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { type PostRouter } from "@/server/api/routers/post";
+import { api } from "@/trpc/react";
 import { getFallbackName } from "@/utils/nameHelper";
+import { TRPCClientError } from "@trpc/client";
+import { MoreVertical } from "lucide-react";
 import { useState, type FC } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,11 +17,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { api } from "@/trpc/react";
+import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import PostForm from "./PostForm";
-import { toast } from "sonner";
-import { TRPCClientError } from "@trpc/client";
 
 interface IProps {
   post: PostRouter["getAll"]["data"][0];
@@ -32,12 +34,14 @@ interface IProps {
 const PostItem: FC<IProps> = ({ post }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const utils = api.useUtils();
 
   const { mutateAsync: deletePost } = api.post.delete.useMutation();
 
   const handleDelete = async () => {
     try {
       await deletePost(post.id);
+      await utils.post.getAll.invalidate();
       toast.success("Post deleted successfully");
     } catch (error) {
       if (error instanceof TRPCClientError) {
@@ -57,10 +61,18 @@ const PostItem: FC<IProps> = ({ post }) => {
           </div>
           <p className="mt-0">{post.createdBy.email ?? ""}</p>
           <DropdownMenu>
-            <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="outline" className="ml-auto">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>edit</DropdownMenuItem>
-              <DropdownMenuItem>delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsDeleteOpen(true)}>
+                delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </CardHeader>

@@ -31,6 +31,7 @@ const PostForm: FC<IProps> = ({ onClose, type = "create", postId }) => {
 
   const form = useForm<z.infer<typeof PostSchema>>({
     resolver: zodResolver(PostSchema),
+    mode: "onBlur",
   });
 
   const { data: post } = api.post.getDetail.useQuery(postId!, {
@@ -93,6 +94,7 @@ const PostForm: FC<IProps> = ({ onClose, type = "create", postId }) => {
             </FormItem>
           )}
         />
+
         <Button type="submit" className="ml-auto" disabled={isLoading}>
           {isLoading ? (
             <>

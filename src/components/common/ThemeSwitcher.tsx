@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -18,7 +18,7 @@ export const ThemeSwitcher = () => {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <motion.button
+      <m.button
         key={theme}
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         className="rounded-full bg-gray-200 p-2 focus:outline-none dark:bg-gray-800"
@@ -34,7 +34,7 @@ export const ThemeSwitcher = () => {
         ) : (
           <Moon className="text-blue-500" size={24} />
         )}
-      </motion.button>
+      </m.button>
     </AnimatePresence>
   );
 };

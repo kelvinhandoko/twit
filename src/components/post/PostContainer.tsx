@@ -13,7 +13,7 @@ const PostContainer = () => {
   const { data, isLoading, fetchNextPage, hasNextPage, error } =
     api.post.getAll.useInfiniteQuery(
       {
-        limit: 10,
+        limit: 3,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
